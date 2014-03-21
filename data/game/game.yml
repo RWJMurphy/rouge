@@ -1,0 +1,35 @@
+---
+game:
+  name: Test game
+  terrains:
+    FLOOR:
+      name: floor
+      char: .
+    WALL:
+      name: wall
+      char: '#'
+      flags:
+        - BLOCKS_MOVEMENT
+        - BLOCKS_LIGHT
+  objects:
+    DOOR:
+      name: door
+      char: +
+      flags:
+        - OPENABLE
+  items: {}
+  monsters: {}
+  maps:
+    - spawn: [10, 4]
+      terrain:
+        - '####################'
+        - '#..................#'
+        - '#..#####.#.#######.#'
+        - '#.#.###.##.#######.#'
+        - '#.##.#.###.#######.#'
+        - '#.###.####.#######.#'
+        - '#..................#'
+        - '####################'
+      objects:
+        - type: DOOR
+          position: [10, 5]
