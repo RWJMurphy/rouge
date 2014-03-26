@@ -37,3 +37,23 @@ game:
     'QUIT':
       - q
       - Q
+    'MOVE_N':
+      - j
+      - up
+    'MOVE_NE':
+      - u
+    'MOVE_E':
+      - l
+      - right
+    'MOVE_SE':
+      - 'n'
+    'MOVE_S':
+      - j
+      - down
+    'MOVE_SW':
+      - b
+    'MOVE_W':
+      - h
+      - right
+    'MOVE_NW':
+      - 'y'

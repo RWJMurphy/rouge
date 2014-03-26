@@ -27,5 +27,7 @@ class Game(object):
             command = self.config.keymap[key]
             if command == "QUIT":
                 self.exit()
+            else:
+                self.log.error("Unhandled command: {}".format(command))
         else:
             self.log.debug("Unhandled key: {}".format(key))
