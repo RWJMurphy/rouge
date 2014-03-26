@@ -8,81 +8,77 @@ __all__ = ["UrwidUI"]
 
 class UrwidUI(object):
     def __init__(self, game):
-        self.main_loop = urwid.MainLoop(MainView(game), unhandled_input=self.exit_on_q)
+        self.game = game
+        self.main_view = MainView(game)
+        self.main_loop = urwid.MainLoop(
+            self.main_view,
+            unhandled_input=self.game.keypress
+        )
 
     def exit_on_q(self, key):
-        if key.lower() == "q":
+        if key in ('q', 'Q'):
             self.exit()
 
     def exit(self):
         raise urwid.ExitMainLoop()
-    
+
     def run(self):
         self.main_loop.run()
 
-
 class MainView(urwid.Pile):
     def __init__(self, game):
+        self.map = MapWidget(game)
+        self.status = StatusWidget(game)
+        self.messages = MessageWidget(game)
+
+        decorated_map = urwid.LineBox(
+            urwid.Overlay(
+                self.map,
+                urwid.SolidFill(),
+                align='center',
+                width=('relative', 100),
+                valign='middle',
+                height=('relative', 100),
+                min_width=10,
+                min_height=10
+            ),
+            "Map"
+        )
+        decorated_status = urwid.LineBox(self.status, "Status")
+        decorated_messages = urwid.LineBox(self.messages, "Messages")
+
+        map_and_status = urwid.Columns([
+            decorated_map,
+            (20, decorated_status)
+        ])
+        map_and_status.focus_postition = 0  # Map
+
         super().__init__([
-            urwid.Columns([
-                urwid.LineBox(
-                    urwid.Overlay(
-                        MapWidget(game),
-                        urwid.SolidFill(),
-                        align='center',
-                        width=('relative', 100),
-                        valign='middle',
-                        height='pack',
-                        min_width=10,
-                        min_height=10
-                    ),
-                    "Map"
-                ),
-                (20, urwid.LineBox(StatusWidget(game), "Status")),
-            ]),
-            (10, urwid.LineBox(MessageWidget(game), "Messages"))
+            map_and_status,
+            (10, decorated_messages)
         ])
         self.game = game
-        self.focus_position = 0  # MapWidget
-
+        self.focus_position = 0  # Columns
 
 class MessageWidget(urwid.ListBox):
-    log_levels = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'TRACE']
     def __init__(self, game):
         super().__init__(urwid.SimpleFocusListWalker([
-            self._widget('INFO', "Welcome to {}!".format(game.name))
+            self._widget('INFO', "Welcome to {}!".format(game.config.name))
         ]))
         self.game = game
 
-    def _widget(self, level, message):
-        return urwid.Text(("LOG_" + level, message))
+    def _widget(self, message, attr=None):
+        if attr:
+            widget = urwid.Text((attr, message))
+        else:
+            widget = urwid.Text(message)
+        return widget
 
-    def add(self, widget):
-        self.body.insert(self.focus_position + 1, widget)
-
-    def log(self, level, message):
-        if level not in MessageWidget.log_levels:
-            self.error("Log level {} not in {}".format(level, Messagewidget.log_levels))
-            self.trace(traceback.format_tb())
-            return False
-
-        self.add(self._widget(level, message))
-
-    def debug(self, message):
-        self.log('DEBUG', message)
-
-    def info(self, message):
-        self.log('INFO', message)
-
-    def warn(self, message):
-        self.log('WARN', message)
-
-    def error(self, message):
-        self.log('ERROR', message)
-
-    def trace(self, message):
-        self.log('TRACE', message)
-
+    def add_message(self, message, attr=None):
+        self.body.insert(
+            self.focus_position + 1,
+            self._widget(message, attr)
+        )
 
 
 class StatusWidget(urwid.Pile):
@@ -91,8 +87,25 @@ class StatusWidget(urwid.Pile):
         self.game = game
 
 
-class MapWidget(urwid.Text):
+class MapWidget(urwid.Widget):
     def __init__(self, game):
-        super().__init__("@", "center")
+        super().__init__()
         self.game = game
 
+    def render(self, size, focus=False):
+        maxcol, maxrow = size
+        midcol, midrow = maxcol//2, maxrow//2
+        player_x, player_y = self.game.current_map.player_pos
+        offset_x, offset_y = midcol - player_x, midrow - player_y
+
+        rendermap = []
+        for out_row in range(maxrow):
+            the_row = []
+            for out_col in range(maxcol):
+                the_row.append(self.game.current_map.at(out_col - offset_x, out_row - offset_y).char)
+            rendermap.append(the_row)
+
+        rendermap[player_y + offset_y][player_x + offset_x] = b'@'
+        rendermap = list(map(lambda row: b''.join(row), rendermap))
+        canvas = urwid.TextCanvas(rendermap, maxcol=maxcol, check_width=True)
+        return canvas

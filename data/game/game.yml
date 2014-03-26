@@ -33,3 +33,7 @@ game:
       objects:
         - type: DOOR
           position: [10, 5]
+  keymap:
+    'QUIT':
+      - q
+      - Q
