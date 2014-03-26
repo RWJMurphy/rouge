@@ -21,3 +21,11 @@ class TestUrwidUI():
 
     def test_mw_init(self):
         assert_equal(self.urwid_ui.main_view.messages.body[0].text, "Welcome to Test game!")
+
+    def test_message_order(self):
+        add_message = self.urwid_ui.main_view.messages.add_message
+        for x in range(10):
+            add_message(str(x))
+        
+        self.test_mw_init()
+        assert_equal(self.urwid_ui.main_view.messages.body[-1].text, str(x))

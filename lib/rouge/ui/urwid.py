@@ -75,10 +75,8 @@ class MessageWidget(urwid.ListBox):
         return widget
 
     def add_message(self, message, attr=None):
-        self.body.insert(
-            self.focus_position + 1,
-            self._widget(message, attr)
-        )
+        self.body.append(self._widget(message, attr))
+        self.set_focus(len(self.body) - 1)
 
 
 class StatusWidget(urwid.Pile):
