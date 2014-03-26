@@ -14,4 +14,4 @@ class TestGame():
         pass
 
     def test_name(self):
-        assert_equal(self.game.name, self.game_config['name'])
+        assert_equal(self.game.config.name, self.game_config['name'])
