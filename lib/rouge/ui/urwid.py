@@ -15,10 +15,6 @@ class UrwidUI(object):
             unhandled_input=self.game.keypress
         )
 
-    def exit_on_q(self, key):
-        if key in ('q', 'Q'):
-            self.exit()
-
     def exit(self):
         raise urwid.ExitMainLoop()
 
