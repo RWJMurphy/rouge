@@ -18,3 +18,6 @@ class TestUrwidUI():
 
     def check_interface_member(self, member):
         assert_in(member, rouge.UrwidUI.__dict__.keys())
+
+    def test_mw_init(self):
+        assert_equal(self.urwid_ui.main_view.messages.body[0].text, "Welcome to Test game!")

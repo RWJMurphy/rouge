@@ -63,7 +63,7 @@ class MainView(urwid.Pile):
 class MessageWidget(urwid.ListBox):
     def __init__(self, game):
         super().__init__(urwid.SimpleFocusListWalker([
-            self._widget('INFO', "Welcome to {}!".format(game.config.name))
+            self._widget("Welcome to {}!".format(game.config.name))
         ]))
         self.game = game
 
