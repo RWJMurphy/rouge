@@ -21,6 +21,9 @@ class UrwidUI(object):
     def run(self):
         self.main_loop.run()
 
+    def invalidate(self):
+        self.main_view._invalidate()
+
 class MainView(urwid.Pile):
     def __init__(self, game):
         self.map = MapWidget(game)
@@ -55,6 +58,12 @@ class MainView(urwid.Pile):
         ])
         self.game = game
         self.focus_position = 0  # Columns
+
+    def _invalidate(self):
+        super()._invalidate()
+        self.map._invalidate()
+        self.status._invalidate()
+        self.messages._invalidate()
 
 class MessageWidget(urwid.ListBox):
     def __init__(self, game):

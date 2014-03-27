@@ -1,11 +1,20 @@
 class Terrain(object):
-    def __init__(self, char):
+    def __init__(self, char, name=None, flags=None):
         self.char = bytes(char, 'utf_8')
+        self.name = name or char
+        self.flags = flags or []
+
+    def has_flag(self, flag):
+        return flag in self.flags
 
     @staticmethod
     def from_dict(terrain_dict):
-        t = Terrain(terrain_dict['char'])
-        return t
+        terrain = Terrain(
+            terrain_dict['char'],
+            name=terrain_dict['name'],
+            flags=terrain_dict.get('flags', [])
+        )
+        return terrain
 
     @staticmethod
     def from_char(char, terrains_by_id):

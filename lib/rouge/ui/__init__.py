@@ -7,5 +7,8 @@ class UI(object):
     def run(self):
         raise NotImplementedError()
 
-    def exit():
+    def exit(self):
+        raise NotImplementedError()
+
+    def invalidate(self):
         raise NotImplementedError()

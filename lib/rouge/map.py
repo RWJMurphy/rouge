@@ -34,6 +34,7 @@ class Map(object):
         self.objects = []
         self.player_pos = (None, None)
 
+    @staticmethod
     def from_dict(map_dict, terrains):
         the_map = Map()
         for line in map_dict['terrain']:

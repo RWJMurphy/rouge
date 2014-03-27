@@ -38,7 +38,7 @@ game:
       - q
       - Q
     'MOVE_N':
-      - j
+      - k
       - up
     'MOVE_NE':
       - u
