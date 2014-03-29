@@ -43,7 +43,10 @@ class Game(object):
                 player_x, player_y = self.current_map.player_pos
                 dest_x, dest_y = player_x + d_x, player_y + d_y
                 dest_terrain = self.current_map.at(dest_x, dest_y)
-                if dest_terrain.has_flag('BLOCKS_MOVEMENT'):
+                if dest_terrain.get_flag('TOGGLE'):
+                    result = dest_terrain.toggle()
+                    self.log.info("You {} the {}.".format(result, dest_terrain.name))
+                elif dest_terrain.get_flag('BLOCKS_MOVEMENT'):
                     self.log.info("You bump into the {}!".format(dest_terrain.name))
                 else:
                     self.current_map.player_pos = dest_x, dest_y

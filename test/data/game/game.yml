@@ -9,14 +9,22 @@ game:
       name: wall
       char: '#'
       flags:
-        - BLOCKS_MOVEMENT
-        - BLOCKS_LIGHT
-  objects:
-    DOOR:
-      name: door
+        BLOCKS_MOVEMENT:
+        BLOCKS_LIGHT:
+    DOOR_CLOSED:
       char: +
+      name: closed door
       flags:
-        - OPENABLE
+        BLOCKS_MOVEMENT:
+        BLOCKS_LIGHT:
+        TOGGLE:
+          to: DOOR_OPEN
+          verb: open
+    DOOR_OPEN:
+      char: _
+      name: open door
+      flags:
+  entities: {}
   items: {}
   monsters: {}
   maps:
@@ -27,13 +35,33 @@ game:
         - '#..#####.#.#######.#'
         - '#.#.###.##.#######.#'
         - '#.##.#.###.#######.#'
-        - '#.###.####.#######.#'
+        - '#.###.####+#######.#'
         - '#..................#'
         - '####################'
-      objects:
-        - type: DOOR
-          position: [10, 5]
+      entities: {}
+      items: {}
+      monsters: {}
   keymap:
     'QUIT':
       - q
       - Q
+    'MOVE_N':
+      - k
+      - up
+    'MOVE_NE':
+      - u
+    'MOVE_E':
+      - l
+      - right
+    'MOVE_SE':
+      - 'n'
+    'MOVE_S':
+      - j
+      - down
+    'MOVE_SW':
+      - b
+    'MOVE_W':
+      - h
+      - right
+    'MOVE_NW':
+      - 'y'

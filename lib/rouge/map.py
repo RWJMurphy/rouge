@@ -31,17 +31,17 @@ class TerrainRow(collections.MutableSequence):
 class Map(object):
     def __init__(self):
         self.terrain = []
-        self.objects = []
+        self.entities = []
         self.player_pos = (None, None)
 
     @staticmethod
-    def from_dict(map_dict, terrains):
+    def from_dict(map_dict):
         the_map = Map()
         for line in map_dict['terrain']:
             row = []
             the_map.terrain.append(row)
             for c in line:
-                row.append(Terrain.from_char(c, terrains))
+                row.append(Terrain.from_char(c))
         the_map.player_pos = map_dict['spawn']
         return the_map
 

@@ -4,6 +4,7 @@ import yaml
 
 from rouge.containers import AttrDict
 from rouge.map import Map
+from rouge.terrain import Terrain
 
 def invert(dictionary):
     return {v: k for k, vl in dictionary.items() for v in vl}
@@ -15,10 +16,11 @@ class Config:
 
         self.name = self.config['name']
         self.db = {}
-        for key in ['terrains', 'objects', 'items', 'monsters']:
+        for key in ['terrains', 'entities', 'items', 'monsters']:
             self.db[key] = copy(self.config[key])
+        Terrain.load_definitions(self.db['terrains'])
 
         self.maps = []
         for map in self.config['maps']:
-            self.maps.append(Map.from_dict(map, self.db['terrains']))
+            self.maps.append(Map.from_dict(map))
         self.keymap = invert(self.config.keymap)
