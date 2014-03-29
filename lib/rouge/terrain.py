@@ -1,5 +1,7 @@
 import re
 
+from rouge.containers import AttrDict
+
 class Terrain(object):
     def __init__(self, char, name=None, flags=None):
         self.char = bytes(char, 'utf_8')
@@ -7,27 +9,24 @@ class Terrain(object):
         self.set_flags(flags)
 
     def set_flags(self, flags=None):
-        flags = flags or []
+        flags = flags or {}
         self.flags = {}
-        for flag in flags:
-            flag_arg = re.match('(.*)\[([^\]]*)\]', flag)
-            if flag_arg:
-                flag = flag_arg.group(1)
-                flag_arg = flag_arg.group(2)
-            else:
-                flag_arg = True
-            self.flags[flag] = flag_arg
+        for flag, arg in flags.items():
+            if arg is None:
+                arg = {}
+            self.flags[flag] = AttrDict(arg)
 
     def get_flag(self, flag):
         return self.flags.get(flag, None)
 
     def toggle(self):
-        toggles_to = self.get_flag('TOGGLE')
-        if toggles_to:
-            self.from_dict(self.terrain_by_id[toggles_to])
-            return True
+        toggle = self.get_flag('TOGGLE')
+        if toggle:
+            old_name = self.name
+            self.from_dict(self.terrain_by_id[toggle.to])
+            return toggle.verb, old_name
         else:
-            return False
+            return None, None
 
     @classmethod
     def load_definitions(cls, terrain_dict):

@@ -23,7 +23,7 @@ game:
     DOOR_OPEN:
       char: _
       name: open door
-      flags:
+      flags: {}
   entities: {}
   items: {}
   monsters: {}
