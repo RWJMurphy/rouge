@@ -23,31 +23,28 @@ class Game(object):
         self.ui.exit()
 
     directions = {
-        'N':  (0, -1),
-        'NE': (1, -1),
-        'E':  (1, 0),
-        'SE': (1, 1),
-        'S':  (0, 1),
-        'SW': (-1, 1),
-        'W':  (-1, 0),
-        'NW': (-1, -1),
+        'DIRECTION_N':  (0, -1),
+        'DIRECTION_NE': (1, -1),
+        'DIRECTION_E':  (1, 0),
+        'DIRECTION_SE': (1, 1),
+        'DIRECTION_S':  (0, 1),
+        'DIRECTION_SW': (-1, 1),
+        'DIRECTION_W':  (-1, 0),
+        'DIRECTION_NW': (-1, -1),
     }
     def keypress(self, key):
         if key in self.config.keymap:
             command = self.config.keymap[key]
             if command == "QUIT":
                 self.exit()
-            elif command.startswith("MOVE_"):
-                direction = command[5:]
-                d_x, d_y = Game.directions[direction]
+            elif command.startswith("DIRECTION_"):
+                d_x, d_y = Game.directions[command]
                 player_x, player_y = self.current_map.player_pos
                 dest_x, dest_y = player_x + d_x, player_y + d_y
                 dest_terrain = self.current_map.at(dest_x, dest_y)
-                if dest_terrain.get_flag('TOGGLE'):
-                    verb, old_name = dest_terrain.toggle()
-                    self.log.info("You {} the {}.".format(verb, old_name))
-                elif dest_terrain.get_flag('BLOCKS_MOVEMENT'):
-                    self.log.info("You bump into the {}!".format(dest_terrain.name))
+                if dest_terrain.can_receive('DEFAULT'):
+                    verb, noun = dest_terrain.receive('DEFAULT')
+                    self.log.info("You {} the {}.".format(verb, noun))
                 else:
                     self.current_map.player_pos = dest_x, dest_y
             else:

@@ -15,9 +15,9 @@ class Config:
             self.config = AttrDict(yaml.load(game_yaml_fh.read())['game'])
 
         self.name = self.config['name']
-        self.db = {}
+        self.db = AttrDict()
         for key in ['terrains', 'entities', 'items', 'monsters']:
-            self.db[key] = copy(self.config[key])
+            self.db[key] = self.config[key]
         Terrain.load_definitions(self.db['terrains'])
 
         self.maps = []
