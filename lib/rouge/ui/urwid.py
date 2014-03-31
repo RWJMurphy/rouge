@@ -24,6 +24,9 @@ class UrwidUI(object):
     def invalidate(self):
         self.main_view._invalidate()
 
+    def prompt(self, message):
+        self.game.log.info(message)
+
 class MainView(urwid.Pile):
     def __init__(self, game):
         self.map = MapWidget(game)

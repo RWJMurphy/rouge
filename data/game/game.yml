@@ -84,3 +84,5 @@ game:
       - right
     'DIRECTION_NW':
       - 'y'
+    'OPEN':
+      - o

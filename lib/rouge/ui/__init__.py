@@ -12,3 +12,6 @@ class UI(object):
 
     def invalidate(self):
         raise NotImplementedError()
+
+    def prompt(self, message):
+        raise NotImplementedError()
